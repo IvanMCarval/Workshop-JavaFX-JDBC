@@ -1,6 +1,7 @@
 package com.example.javafx.gui;
 
 import com.example.javafx.Main;
+import com.example.javafx.gui.listeners.DataChangeListener;
 import com.example.javafx.gui.util.Alerts;
 import com.example.javafx.gui.util.Utils;
 import com.example.javafx.model.entities.Department;
@@ -26,7 +27,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class DepartmentListController implements Initializable {
+public class DepartmentListController implements Initializable, DataChangeListener {
     private DepartmentService service;
     @FXML
     private TableView<Department> tableViewDepartment;
@@ -79,6 +80,7 @@ public class DepartmentListController implements Initializable {
            DepartmentFormController controller = loader.getController();
            controller.setDepartment(obj);
            controller.setDepartmentService(new DepartmentService());
+           controller.subscribeDataChangeListener(this);
            controller.updateFormData();
 
            Stage dialogStage = new Stage();
@@ -92,5 +94,10 @@ public class DepartmentListController implements Initializable {
            e.printStackTrace();
            Alerts.showAlert("IO Exception", "Error loadin view", e.getMessage(), Alert.AlertType.ERROR);
        }
+    }
+
+    @Override
+    public void onDataChanged() {
+        updateTableView();
     }
 }
