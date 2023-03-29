@@ -2,6 +2,7 @@ package com.example.javafx.gui;
 
 import com.example.javafx.Main;
 import com.example.javafx.gui.util.Alerts;
+import com.example.javafx.model.services.DepartmentService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -31,7 +32,29 @@ public class MainViewController implements Initializable {
 
     @FXML
     public void onMenuItemDepartmentAction() {
-        loadView("/com/example/javafx/gui/DepartmentList.fxml");
+        loadView2("/com/example/javafx/gui/DepartmentList.fxml");
+    }
+
+    private void loadView2(String absoluteName) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
+            VBox newVBox = loader.load();
+
+            Scene mainScene = Main.getMainScene();
+            VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
+
+            Node mainMenu = mainVBox.getChildren().get(0);
+            mainVBox.getChildren().clear();
+            mainVBox.getChildren().add(mainMenu);
+            mainVBox.getChildren().addAll(newVBox.getChildren());
+
+            DepartmentListController controller = loader.getController();
+            controller.setDepartmentService(new DepartmentService());
+            controller.updateTableView();
+
+        } catch (IOException e) {
+            Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     @FXML
@@ -61,6 +84,5 @@ public class MainViewController implements Initializable {
         } catch (IOException e) {
             Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
         }
-
     }
 }
