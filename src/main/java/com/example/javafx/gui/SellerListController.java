@@ -6,6 +6,7 @@ import com.example.javafx.gui.listeners.DataChangeListener;
 import com.example.javafx.gui.util.Alerts;
 import com.example.javafx.gui.util.Utils;
 import com.example.javafx.model.entities.Seller;
+import com.example.javafx.model.services.DepartmentService;
 import com.example.javafx.model.services.SellerService;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -97,7 +98,8 @@ public class SellerListController implements Initializable, DataChangeListener {
 
            SellerFormController controller = loader.getController();
            controller.setSeller(obj);
-           controller.setSellerService(new SellerService());
+           controller.setServices(new SellerService(), new DepartmentService());
+           controller.loadAssociatedObjects();
            controller.subscribeDataChangeListener(this);
            controller.updateFormData();
 
